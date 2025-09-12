@@ -24,7 +24,8 @@ public class BoardDAO {
         conn = DBUtil.getConnection();
 
         // 2. 쿼리 생성
-        String sql = "insert into boardTable(btitle, bcontent, bwriter, bdate) values(?, ?, ?, now())";
+        //String sql = "insert into boardTable(btitle, bcontent, bwriter, bdate) values(?, ?, ?, now())";
+        String sql = "call createBoard(?, ?, ?)";
 
         // 3. Connection 쿼리를 담아 DB 서버로 request 할 객체 PreparedStatement 생성
         try(PreparedStatement pstmt = conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)){
@@ -35,23 +36,11 @@ public class BoardDAO {
 
             // 5. 서버로 전송 후 결과 값 ( int 성공 1, 실패 0 )
             int result = pstmt.executeUpdate();
-            boolean ok = result > 0;
-
-            // 생성된 PK를 Board 객체에 반영
-            // 시간도 Board 객체에 반영
-            // 이후 arraylist에 저장
-//            try(ResultSet rs = pstmt.getGeneratedKeys()) {
-//                if(rs.next()){
-//                    int newbno = rs.getInt(1);
-//                    board.setBno(newbno);
-//                    Date newDate = rs.getDate("bdate");
-//                    board.setBdate(newDate);
-//
-//                    boardList.add(board);
-//                }
-//            }
-            return ok;
-
+            if (result > 0) {
+                searchAll();
+                return true;
+            }
+            return false;
         }catch (SQLException e){
             e.printStackTrace();
             return false;
@@ -71,7 +60,8 @@ public class BoardDAO {
         conn = DBUtil.getConnection();
 
         // 2. 쿼리 생성
-        String sql = "select * from boardTable";
+        //String sql = "select * from boardTable";
+        String sql = "call searchAll()";
 
         // 3. Connection 쿼리를 담아 DB 서버로 request 할 객체 PreparedStatement 생성
         try(PreparedStatement pstmt = conn.prepareStatement(sql)){
@@ -89,9 +79,8 @@ public class BoardDAO {
                     board.setBdate(rs.getDate(5));
                     if(!boardList.contains(board)) boardList.add(board);
                 }
+                return boardList;
             }
-            return boardList;
-
         }catch (SQLException e){
             e.printStackTrace();
             return null;
@@ -110,7 +99,8 @@ public class BoardDAO {
         conn = DBUtil.getConnection();
 
         // 2. 쿼리 생성
-        String sql = "select * from boardTable where bno = ?";
+        //String sql = "select * from boardTable where bno = ?";
+        String sql = "call searchOne(?)";
 
         // 3. Connection 쿼리를 담아 DB 서버로 request 할 객체 PreparedStatement 생성
         try(PreparedStatement pstmt = conn.prepareStatement(sql)){
@@ -146,7 +136,9 @@ public class BoardDAO {
     // 글 수정 (제목, 내용만 수정)
     public boolean updateBoard(Board board) {
         conn = DBUtil.getConnection();
-        String sql = "UPDATE boardTable SET btitle = ? , bcontent = ? WHERE bno = ? ";
+        //String sql = "UPDATE boardTable SET btitle = ? , bcontent = ? WHERE bno = ? ";
+        String sql = "call updateBoard(?, ?, ?)";
+
         try(PreparedStatement pstmt = conn.prepareStatement(sql)){
             pstmt.setString(1, board.getBtitle());
             pstmt.setString(2, board.getBcontent());
@@ -160,71 +152,14 @@ public class BoardDAO {
         return false;
     }
 
-//    // 글 수정 기능
-//    public Board updateBoard(int bno){
-//        // 1. Connection 필요
-//        conn = DBUtil.getConnection();
-//
-//        // 2. 쿼리 생성
-//        String sql = "update boardTable set btitle = ?, bcontent = ?, bwriter = ?, bdate = now() where bno = ?";
-//
-//        // 3. Connection 쿼리를 담아 DB 서버로 request 할 객체 PreparedStatement 생성
-//        try(PreparedStatement pstmt = conn.prepareStatement(sql)){
-//            // 4. 값을 세팅
-//            Board board = boardDataUpdate();
-//
-//            pstmt.setString(1, board.getBtitle());
-//            pstmt.setString(2, board.getBcontent());
-//            pstmt.setString(3, board.getBwriter());
-//            pstmt.setInt(4, bno);
-//
-//            // 5. update 후 결과 값에 따라 객체 반환
-//            int result = pstmt.executeUpdate();
-//            if(result > 0) {
-//                boardList.set(bno-1, board);
-//                return board;
-//            }
-//            else return null;
-//
-//        }catch (SQLException e){
-//            e.printStackTrace();
-//            return null;
-//        }  finally{
-//            try {
-//                conn.close();
-//            } catch (SQLException e) {
-//                throw new RuntimeException(e);
-//            }
-//        }
-//    }
-//
-//    public Board boardDataUpdate() {
-//        Board board = new Board();
-//        try(BufferedReader br = new BufferedReader(new InputStreamReader(System.in))){
-//            System.out.println("글 수정 입력");
-//            System.out.println("제목 입력");
-//            String title =br.readLine();
-//            board.setBtitle(title);
-//            System.out.println("내용 입력");
-//            String content = br.readLine();
-//            board.setBcontent(content);
-//            System.out.println("작성자 입력");
-//            String writer = br.readLine();
-//            board.setBwriter(writer);
-//            return board;
-//        } catch (IOException e){
-//            e.printStackTrace();
-//            return null;
-//        }
-//    }
-
     // 글 삭제 기능
     public boolean deleteBoard(int bno){
         // 1. Connection 필요
         conn = DBUtil.getConnection();
 
         // 2. 쿼리 생성
-        String sql = "delete from boardTable where bno = ?";
+        //String sql = "delete from boardTable where bno = ?";
+        String sql = "call deleteBoard(?)";
 
         // 3. Connection 쿼리를 담아 DB 서버로 request 할 객체 PreparedStatement 생성
         try(PreparedStatement pstmt = conn.prepareStatement(sql)){
@@ -235,11 +170,10 @@ public class BoardDAO {
             int result = pstmt.executeUpdate();
 
             if(result > 0) {
-                boardList.remove(bno-1);
+                boardList.removeIf(board -> board.getBno() == bno);
                 return true;
             }
-            else return false;
-
+            return false;
         }catch (SQLException e){
             e.printStackTrace();
             return false;
