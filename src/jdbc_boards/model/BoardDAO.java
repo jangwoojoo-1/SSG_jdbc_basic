@@ -48,7 +48,7 @@ public class BoardDAO {
             try {
                 conn.close();
             } catch (SQLException e) {
-                throw new RuntimeException(e);
+                e.printStackTrace();
             }
         }
 
@@ -88,7 +88,7 @@ public class BoardDAO {
             try {
                 conn.close();
             } catch (SQLException e) {
-                throw new RuntimeException(e);
+                e.printStackTrace();
             }
         }
     }
@@ -128,7 +128,7 @@ public class BoardDAO {
             try {
                 conn.close();
             } catch (SQLException e) {
-                throw new RuntimeException(e);
+                e.printStackTrace();
             }
         }
     }
@@ -145,9 +145,14 @@ public class BoardDAO {
             pstmt.setInt(3, board.getBno());
             int ack =  pstmt.executeUpdate();
             if (ack > 0)  return true;
-
         } catch (Exception e) {
             e.printStackTrace();
+        }finally{
+            try {
+                conn.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
         return false;
     }
@@ -181,7 +186,7 @@ public class BoardDAO {
             try {
                 conn.close();
             } catch (SQLException e) {
-                throw new RuntimeException(e);
+                e.printStackTrace();
             }
         }
     }

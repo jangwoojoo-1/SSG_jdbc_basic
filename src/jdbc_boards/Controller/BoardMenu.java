@@ -108,14 +108,14 @@ public class BoardMenu {
 
     public Board boardDataInput() throws IOException{
         Board board = new Board();
-        System.out.println("새로운 글 입력");
-        System.out.println("제목 입력");
+        System.out.println("[새로운 글 입력]");
+        System.out.print("제목 입력 : ");
         String title =input.readLine();
         board.setBtitle(title);
-        System.out.println("내용 입력");
+        System.out.print("내용 입력\n > ");
         String content = input.readLine();
         board.setBcontent(content);
-        System.out.println("작성자 입력");
+        System.out.print("작성자 입력 : ");
         String writer = input.readLine();
         board.setBwriter(writer);
         return board;
@@ -123,22 +123,22 @@ public class BoardMenu {
 
     public int boardSelect() throws IOException{
         Board board = new Board();
-        System.out.println("글 선택");
-        System.out.println("글 번호 입력");
+        System.out.println("[글 선택]");
+        System.out.print("글 번호 입력 :  ");
         int no = Integer.parseInt(input.readLine());
         return no;
     }
 
     public Board boardDataUpdate() throws IOException {
         Board board = new Board();
-        System.out.println("글 수정 입력");
-        System.out.println("글 번호 입력");
+        System.out.println("[글 수정 입력]");
+        System.out.print("글 번호 입력 :  ");
         int no = Integer.parseInt(input.readLine());
         board.setBno(no);
-        System.out.println("제목 입력");
+        System.out.print("제목 입력 :  ");
         String title =input.readLine();
         board.setBtitle(title);
-        System.out.println("내용 입력");
+        System.out.print("내용 입력\n > ");
         String content = input.readLine();
         board.setBcontent(content);
 //        System.out.println("작성자 입력");
