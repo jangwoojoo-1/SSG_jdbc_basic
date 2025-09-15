@@ -36,7 +36,6 @@ public class MemberDao {
             int result = cstmt.getInt(5);
 
             if(result == 100){
-                conn.rollback();
                 System.out.println("이미 가입된 사용자입니다.");
             } else{
                 //conn.commit();
@@ -67,7 +66,6 @@ public class MemberDao {
                 int result = cs.getInt(1);
 
                 if(result == 100){
-                    conn.rollback();
                     System.out.println("회원 데이터가 존재하지 않습니다.");
                 } else{
                     System.out.println("[회원 리스트]");
@@ -102,11 +100,10 @@ public class MemberDao {
                 String id = br.readLine();
 
                 System.out.println("-".repeat(30));
-                System.out.println(" no | 아이디 | 비밀번호 | 이메일 | 전화번호 | 가입일 | 포인트");
                 cs.setString(1, id);
 
                 //OUT 파라미터 세팅
-                cs.registerOutParameter(1, java.sql.Types.INTEGER);
+                cs.registerOutParameter(2, java.sql.Types.INTEGER);
 
                 // 실행
                 cs.execute();
@@ -114,10 +111,10 @@ public class MemberDao {
                 int result = cs.getInt(2);
 
                 if(result == 100){
-                    conn.rollback();
                     System.out.println("회원이 존재하지 않습니다.");
                 } else{
                     System.out.println("[회원]");
+                    System.out.println(" no | 아이디 | 비밀번호 | 이메일 | 전화번호 | 가입일 | 포인트");
                     try (ResultSet rs = cs.getResultSet()) {
                         if (rs.next()){
                             System.out.println(" " + rs.getInt(1) + " | " +
@@ -159,7 +156,7 @@ public class MemberDao {
                 cs.setString(3, content);
 
                 //OUT 파라미터 세팅
-                cs.registerOutParameter(1, java.sql.Types.INTEGER);
+                cs.registerOutParameter(4, java.sql.Types.INTEGER);
 
                 // 실행
                 cs.execute();
@@ -167,7 +164,6 @@ public class MemberDao {
                 int result = cs.getInt(4);
 
                 if(result == 100){
-                    conn.rollback();
                     System.out.println("수정 실패!");
                 } else {
                     System.out.println("수정 성공!");
@@ -191,7 +187,7 @@ public class MemberDao {
                 cs.setString(1, id);
 
                 //OUT 파라미터 세팅
-                cs.registerOutParameter(1, java.sql.Types.INTEGER);
+                cs.registerOutParameter(2, java.sql.Types.INTEGER);
 
                 // 실행
                 cs.execute();
@@ -199,7 +195,6 @@ public class MemberDao {
                 int result = cs.getInt(2);
 
                 if(result == 100){
-                    conn.rollback();
                     System.out.println("회원 삭제 실패!");
                 } else{
                     System.out.println("회원이 삭제되었습니다.");
