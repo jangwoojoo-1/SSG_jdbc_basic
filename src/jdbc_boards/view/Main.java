@@ -9,7 +9,5 @@ public class Main {
         BoardMenu boardMenu = new BoardMenu();
 
         boardMenu.boardMenu();
-
-
     }
 }

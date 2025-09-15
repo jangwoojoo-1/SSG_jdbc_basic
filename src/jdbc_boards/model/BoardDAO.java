@@ -78,6 +78,7 @@ public class BoardDAO {
                     board.setBwriter(rs.getString(4));
                     board.setBdate(rs.getDate(5));
                     if(!boardList.contains(board)) boardList.add(board);
+                    else boardList.set(boardList.indexOf(board), board);
                 }
                 return boardList;
             }
@@ -140,9 +141,9 @@ public class BoardDAO {
         String sql = "call updateBoard(?, ?, ?)";
 
         try(PreparedStatement pstmt = conn.prepareStatement(sql)){
-            pstmt.setString(1, board.getBtitle());
-            pstmt.setString(2, board.getBcontent());
-            pstmt.setInt(3, board.getBno());
+            pstmt.setInt(1, board.getBno());
+            pstmt.setString(2, board.getBtitle());
+            pstmt.setString(3, board.getBcontent());
             int ack =  pstmt.executeUpdate();
             if (ack > 0)  return true;
         } catch (Exception e) {
