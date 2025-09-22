@@ -9,6 +9,7 @@ public class main {
 
     public static void main(String[] args) throws IOException {
         MemberDao memberDao = new MemberDao();
+
         while(true) {
         System.out.println("1.create | 2.SearchAll | 3. SearchOne | 4.Update | 5.Delete");
         System.out.print("번호 선택 :  ");
